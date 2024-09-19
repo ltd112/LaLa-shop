@@ -1,0 +1,15 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /lala
+spring:
+  datasource:
+    url: "jdbc:mysql://localhost:3308/lala_db?createDatabaseIfNotExist=true"
+    username: root
+    password: 122002
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
