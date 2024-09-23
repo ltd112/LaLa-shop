@@ -43,7 +43,7 @@ public class ImageServiceImpl implements ImageService {
     public List<ImageDto> saveImages(Long productId, List<MultipartFile> files) {
         Product product = productService.getProductById(productId);
 
-        List<ImageDto> saveImageDto = new ArrayList<>();
+        List<ImageDto> savedImageDto = new ArrayList<>();
 
         for(MultipartFile file : files){
             try {
@@ -65,14 +65,14 @@ public class ImageServiceImpl implements ImageService {
                 imageDto.setId(savedImage.getId());
                 imageDto.setFileName(savedImage.getFileName());
                 imageDto.setDownloadUrl(savedImage.getDownloadUrl());
-                saveImageDto.add(imageDto);
+                savedImageDto.add(imageDto);
 
             }
             catch (IOException | SQLException e){
                 throw new RuntimeException(e.getMessage());
             }
         }
-        return List.of();
+        return savedImageDto;
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.dat.LaLa_shop.service.impl;
 
 import com.dat.LaLa_shop.dto.ImageDto;
 import com.dat.LaLa_shop.dto.ProductDto;
+import com.dat.LaLa_shop.exceptions.AlreadyExistsException;
 import com.dat.LaLa_shop.exceptions.ResourceNotFoundException;
 import com.dat.LaLa_shop.model.Category;
 import com.dat.LaLa_shop.model.Image;
@@ -31,6 +32,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product addProduct(AddProductRequest request) {
+        if(productExists(request.getName(), request.getBrand())){
+            throw new AlreadyExistsException("product exist with "+ request.getName() +" " +request.getBrand() );
+        }
+
         Category category = Optional.ofNullable(categoryRepository.findByName(request.getCategory().getName()))
                 .orElseGet(() ->
                 {
@@ -39,6 +44,10 @@ public class ProductServiceImpl implements ProductService {
                 });
         request.setCategory(category);
         return productRepository.save(createProduct(request, category));
+    }
+
+    private boolean productExists(String name, String brand){
+        return productRepository.existsByNameAndBrand(name, brand);
     }
     private Product createProduct(AddProductRequest request, Category category) {
         return new Product(
