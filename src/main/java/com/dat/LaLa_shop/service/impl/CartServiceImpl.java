@@ -2,6 +2,7 @@ package com.dat.LaLa_shop.service.impl;
 
 import com.dat.LaLa_shop.exceptions.ResourceNotFoundException;
 import com.dat.LaLa_shop.model.Cart;
+import com.dat.LaLa_shop.model.User;
 import com.dat.LaLa_shop.repository.CartItemRepository;
 import com.dat.LaLa_shop.repository.CartRepository;
 import com.dat.LaLa_shop.service.CartService;
@@ -12,6 +13,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Service
@@ -49,11 +51,12 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public Long initializeNewCart() {
-        Cart cart = new Cart();
-        Long newCartId = cartIdGenerator.incrementAndGet();
-        cart.setId(newCartId);
-        return cartRepository.save(cart).getId();
+    public Cart initializeNewCart(User user) {
+       return Optional.ofNullable(getCartByUserId(user.getId())).orElseGet(()->{
+           Cart cart = new Cart();
+           cart.setUser(user);
+           return cartRepository.save(cart);
+       });
     }
 
     @Override
